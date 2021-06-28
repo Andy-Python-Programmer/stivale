@@ -1,4 +1,4 @@
-use crate::StivaleStruct;
+use super::StivaleStruct;
 
 macro_rules! make_header_tag {
 	($name:ident, $id:expr) => {
