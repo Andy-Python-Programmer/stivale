@@ -58,14 +58,14 @@ impl StivaleTerminalTag {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// let terminal_tag = stivale_struct.terminal();
+    /// let terminal_tag = stivale_struct.terminal().expect("Terminal tag was provided by the stivale2 bootloader");
     /// let term_write = terminal_tag.term_write();
     ///
     /// term_write("Hello, Stivale!");
     /// term_write("Hello, Rust!")
     /// ```
     ///
-    /// ## Saftey
+    /// ## Safety
     /// This function is **not** thread safe.
     pub fn term_write(&self) -> impl Fn(&str) {
         let __fn_ptr = self.term_write_addr as *const ();
