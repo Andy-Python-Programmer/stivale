@@ -1,3 +1,4 @@
+/// Helper function to validate and create a string from a slice.
 pub(crate) fn string_from_slice(slice: &[u8]) -> &str {
     let mut length = 0;
 
