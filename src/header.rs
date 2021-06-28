@@ -38,57 +38,57 @@ macro_rules! make_header_tag {
 }
 
 union StivaleHeaderEntryPoint {
-	func: extern "C" fn(&'static StivaleStruct) -> !,
-	zero: u64,
+    func: extern "C" fn(&'static StivaleStruct) -> !,
+    zero: u64,
 }
 
 #[repr(C, packed)]
 pub struct StivaleHeader {
-	entry_point: StivaleHeaderEntryPoint,
-	stack: *const u8,
-	flags: u64,
-	tags: *const (),
+    entry_point: StivaleHeaderEntryPoint,
+    stack: *const u8,
+    flags: u64,
+    tags: *const (),
 }
 
 impl StivaleHeader {
-	pub const fn new() -> Self {
-		Self {
-			entry_point: StivaleHeaderEntryPoint { zero: 0 },
-			stack: core::ptr::null(),
-			flags: 0,
-			tags: core::ptr::null(),
-		}
-	}
+    pub const fn new() -> Self {
+        Self {
+            entry_point: StivaleHeaderEntryPoint { zero: 0 },
+            stack: core::ptr::null(),
+            flags: 0,
+            tags: core::ptr::null(),
+        }
+    }
 
-	pub const fn entry_point(mut self, func: extern "C" fn(&'static StivaleStruct) -> !) -> Self {
-		self.entry_point = StivaleHeaderEntryPoint { func };
-		self
-	}
+    pub const fn entry_point(mut self, func: extern "C" fn(&'static StivaleStruct) -> !) -> Self {
+        self.entry_point = StivaleHeaderEntryPoint { func };
+        self
+    }
 
-	pub const fn stack(mut self, stack: *const u8) -> Self {
-		self.stack = stack;
-		self
-	}
+    pub const fn stack(mut self, stack: *const u8) -> Self {
+        self.stack = stack;
+        self
+    }
 
-	pub const fn flags(mut self, flags: u64) -> Self {
-		self.flags = flags;
-		self
-	}
+    pub const fn flags(mut self, flags: u64) -> Self {
+        self.flags = flags;
+        self
+    }
 
-	pub const fn tags(mut self, tags: *const ()) -> Self {
-		self.tags = tags;
-		self
-	}
+    pub const fn tags(mut self, tags: *const ()) -> Self {
+        self.tags = tags;
+        self
+    }
 }
 
 make_header_tag!(StivaleFramebufferHeaderTag, 0x3ecc1bc43d0f7971, {
-	framebuffer_width: u16 = 0,
-	framebuffer_height: u16 = 0,
-	framebuffer_bpp: u16 = 0
+    framebuffer_width: u16 = 0,
+    framebuffer_height: u16 = 0,
+    framebuffer_bpp: u16 = 0
 });
 
 make_header_tag!(StivaleTerminalHeaderTag, 0xa85d499b1823be72, {
-	flags: u64 = 0
+    flags: u64 = 0
 });
 
 unsafe impl Send for StivaleHeader {}
