@@ -77,3 +77,11 @@ impl StivaleTerminalTag {
         }
     }
 }
+
+/// This tag is used to get the location of the ACPI RSDP structure in memory.
+#[repr(C, packed)]
+pub struct StivaleRsdpTag {
+    pub header: StivaleTagHeader,
+    /// Pointer to the ACPI RSDP structure.
+    pub rsdp: u64,
+}
