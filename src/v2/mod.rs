@@ -50,4 +50,34 @@ impl StivaleStruct {
         self.get_tag(0xc2b3f4c3233b0974)
             .map(|addr| unsafe { &*(addr as *const StivaleTerminalTag) })
     }
+
+    pub fn memory_map(&self) -> Option<&StivaleMemoryMapTag> {
+        self.get_tag(0x2187f79e8612de07)
+            .map(|addr| unsafe { &*(addr as *const StivaleMemoryMapTag) })
+    }
+
+    pub fn epoch(&self) -> Option<&StivaleEpochTag> {
+        self.get_tag(0x566a7bed888e1407)
+            .map(|addr| unsafe { &*(addr as *const StivaleEpochTag) })
+    }
+
+    pub fn frimware(&self) -> Option<&StivaleFirmwareTag> {
+        self.get_tag(0x359d837855e3858c)
+            .map(|addr| unsafe { &*(addr as *const StivaleFirmwareTag) })
+    }
+
+    pub fn efi_system_table(&self) -> Option<&StivaleEfiSystemTableTag> {
+        self.get_tag(0x4bc5ec15845b558e)
+            .map(|addr| unsafe { &*(addr as *const StivaleEfiSystemTableTag) })
+    }
+
+    pub fn kernel_file(&self) -> Option<&StivaleKernelFileTag> {
+        self.get_tag(0xe599d90c2975584a)
+            .map(|addr| unsafe { &*(addr as *const StivaleKernelFileTag) })
+    }
+
+    pub fn kernel_slide(&self) -> Option<&StivalekernelSlideTag> {
+        self.get_tag(0xee80847d01506c57)
+            .map(|addr| unsafe { &*(addr as *const StivalekernelSlideTag) })
+    }
 }

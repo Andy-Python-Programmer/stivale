@@ -135,10 +135,15 @@ pub struct StivaleMemoryMapTag {
     /// Total length of the memory map entries.
     pub entries_len: u64,
     /// Slice of the memory map entries.
-    pub entry_array: [StivaleMemoryMapEntry],
+    pub entry_array: [StivaleMemoryMapEntry; 0],
 }
 
 impl StivaleMemoryMapTag {
+    /// Return's the slice of memory map entries.
+    pub fn as_slice(&self) -> &[StivaleMemoryMapEntry] {
+        unsafe { core::slice::from_raw_parts(self.entry_array.as_ptr(), self.entries_len as usize) }
+    }
+
     /// Returns an iterator over all the memory regions.
     pub fn iter(&self) -> StivaleMemoryMapIter {
         StivaleMemoryMapIter {
@@ -164,7 +169,7 @@ impl<'a> Iterator for StivaleMemoryMapIter<'a> {
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.current < self.sref.entries_len {
-            let entry = &self.sref.entry_array[self.current as usize];
+            let entry = &self.sref.as_slice()[self.current as usize];
             self.current += 1;
 
             Some(entry)
@@ -172,4 +177,56 @@ impl<'a> Iterator for StivaleMemoryMapIter<'a> {
             None
         }
     }
+}
+
+/// This tag is used to get the current UNIX epoch, as per RTC.
+#[repr(C, packed)]
+pub struct StivaleEpochTag {
+    pub header: StivaleTagHeader,
+    /// UNIX epoch at boot, which is read from system RTC.
+    pub epoch: u64,
+}
+
+bitflags::bitflags! {
+    /// Bitfield representing the firmware and boot flags passed by the bootloader.
+    pub struct StivaleFirmwareTagFlags: u64 {
+        /// The kernel was booted in UEFI mode.
+        const UEFI = 0x00;
+        /// The kernel was booted in a legacy BIOS mode.
+        const BIOS = 0x01;
+    }
+}
+
+/// This tag is used to get the info about the firmware.
+#[repr(C, packed)]
+pub struct StivaleFirmwareTag {
+    pub header: StivaleTagHeader,
+    /// Flags telling about the firmware and boot flags passed by the bootloader.
+    pub flags: StivaleFirmwareTagFlags,
+}
+
+/// This tag is used to get a pointer to the EFI system table if available.
+#[repr(C, packed)]
+pub struct StivaleEfiSystemTableTag {
+    pub header: StivaleTagHeader,
+    /// Address of the EFI system table.
+    pub system_table_addr: u64,
+}
+
+/// This tag is used to get the kernel with a pointer to a copy the raw executable
+/// file of the kernel that the bootloader loaded.
+#[repr(C, packed)]
+pub struct StivaleKernelFileTag {
+    pub header: StivaleTagHeader,
+    /// Address of the raw kernel file.
+    pub kernel_file_addr: u64,
+}
+
+/// This tag is used to get the slide that the bootloader applied over the kernel's load
+/// address as a positive offset.
+#[repr(C, packed)]
+pub struct StivalekernelSlideTag {
+    pub header: StivaleTagHeader,
+    /// The kernel slide. See structure-level documentation for more information.
+    pub kernel_slide: u64,
 }
