@@ -1,5 +1,5 @@
 [package]
-name = "stivale"
+name = "stivale-rs"
 description = "Rust crate for parsing stivale and stivale 2 structures"
 version = "0.2.1"
 authors = ["Anhad Singh <andypythonappdeveloper@gmail.com>"]
