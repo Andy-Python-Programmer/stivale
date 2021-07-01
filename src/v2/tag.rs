@@ -225,7 +225,7 @@ pub struct StivaleKernelFileTag {
 /// This tag is used to get the slide that the bootloader applied over the kernel's load
 /// address as a positive offset.
 #[repr(C, packed)]
-pub struct StivalekernelSlideTag {
+pub struct StivaleKernelSlideTag {
     pub header: StivaleTagHeader,
     /// The kernel slide. See structure-level documentation for more information.
     pub kernel_slide: u64,

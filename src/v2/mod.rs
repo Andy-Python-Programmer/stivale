@@ -76,8 +76,8 @@ impl StivaleStruct {
             .map(|addr| unsafe { &*(addr as *const StivaleKernelFileTag) })
     }
 
-    pub fn kernel_slide(&self) -> Option<&StivalekernelSlideTag> {
+    pub fn kernel_slide(&self) -> Option<&StivaleKernelSlideTag> {
         self.get_tag(0xee80847d01506c57)
-            .map(|addr| unsafe { &*(addr as *const StivalekernelSlideTag) })
+            .map(|addr| unsafe { &*(addr as *const StivaleKernelSlideTag) })
     }
 }
