@@ -40,6 +40,15 @@ pub struct StivaleFramebufferTag {
     pub blue_mask_shift: u8,
 }
 
+impl StivaleFramebufferTag {
+    /// Returns the size of the framebuffer.
+    pub fn size(&self) -> usize {
+        self.framebuffer_pitch as usize
+            * self.framebuffer_height as usize
+            * (self.framebuffer_bpp as usize / 8)
+    }
+}
+
 /// If the terminal tag was requested through the terminal tag header and its supported by the stivale
 /// bootloader, this tag is returned to the kernel. This tag provides an interface to the stivale terminal.
 #[repr(C, packed)]
@@ -129,6 +138,21 @@ pub struct StivaleMemoryMapEntry {
     pub entry_type: StivaleMemoryMapEntryType,
 
     padding: u32,
+}
+
+impl StivaleMemoryMapEntry {
+    /// Returns the end address of this memory region.
+    #[inline]
+    pub fn end_address(&self) -> u64 {
+        self.base + self.length
+    }
+
+    /// Returns the entry type of this memory region. External function is required
+    /// as reference the entry_type packed field is not aligned.
+    #[inline]
+    pub fn entry_type(&self) -> StivaleMemoryMapEntryType {
+        self.entry_type
+    }
 }
 
 #[repr(C, packed)]
