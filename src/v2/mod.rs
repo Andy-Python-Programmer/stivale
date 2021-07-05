@@ -92,7 +92,7 @@ impl StivaleStruct {
             .map(|addr| unsafe { &*(addr as *const StivaleEpochTag) })
     }
 
-    pub fn frimware(&self) -> Option<&'static StivaleFirmwareTag> {
+    pub fn firmware(&self) -> Option<&'static StivaleFirmwareTag> {
         self.get_tag(0x359d837855e3858c)
             .map(|addr| unsafe { &*(addr as *const StivaleFirmwareTag) })
     }
