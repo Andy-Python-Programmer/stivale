@@ -11,10 +11,40 @@ union StivaleHeaderEntryPoint {
     zero: u16,
 }
 
+bitflags::bitflags! {
+    pub struct StivaleHeaderFlags: u16 {
+        /// If set, the bootloader will be instructed to use graphics
+        /// framebuffer mode. Else text mode will be selected.
+        const FRAMEBUFFER_MODE = 1 << 0;
+        /// If set, level 5 paging will be requested to the bootloader
+        /// (only if avaliable). Else standard level 4 paging will be used.
+        ///
+        /// ## 32-bit
+        /// This bit is ignored for 32-bit kernels.
+        const LEVEL_5_PAGING = 1 << 1;
+        /// Formerly used to indicate whether to enable KASLR,
+        /// this flag is now reserved as KASLR is enabled in the
+        /// bootloader configuration instead. Presently
+        /// reserved and unused.
+        const KASLR = 1 << 2;
+        /// If set, all pointers, except otherwise noted,
+        /// are to be offset to the higher half. That is,
+        /// their value will be their physical address plus
+        /// `0xffff800000000000` with 4-level paging or
+        /// `0xff00000000000000` with 5-level paging on x86_64.
+        /// Success for this feature can be tested by checking
+        /// whether the stivale struct pointer argument passed
+        /// to the entry point function is in the higher
+        /// half or not.
+        const HIGHER_HALF = 1 << 3;
+        const NULL = 0x00;
+    }
+}
+
 #[repr(C, packed)]
 pub struct StivaleHeader {
     stack: *const u8,
-    flags: u16,
+    flags: StivaleHeaderFlags,
     framebuffer_width: u16,
     framebuffer_height: u16,
     framebuffer_bpp: u16,
@@ -25,7 +55,7 @@ impl StivaleHeader {
     pub fn new() -> Self {
         Self {
             stack: core::ptr::null(),
-            flags: 0x00,
+            flags: StivaleHeaderFlags::empty(),
             framebuffer_width: 0x00,
             framebuffer_height: 0x00,
             framebuffer_bpp: 0x00,
@@ -51,6 +81,13 @@ impl StivaleHeader {
     /// set to zero, the bootloader would pick the best possible video mode automatically (recommended).
     pub fn framebuffer_bpp(mut self, framebuffer_bpp: u16) -> Self {
         self.framebuffer_bpp = framebuffer_bpp;
+        self
+    }
+
+    /// Sets the provided stivale header flags. See the documentation of [StivaleHeaderFlags]
+    /// for more information.
+    pub fn flags(mut self, flags: StivaleHeaderFlags) -> Self {
+        self.flags = flags;
         self
     }
 
