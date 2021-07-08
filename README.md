@@ -1,4 +1,9 @@
-# stivale-rs
+# `stivale-rs`
+
+![workflow](https://github.com/Andy-Python-Programmer/stivale/workflows/Build/badge.svg)
+![crates.io](https://img.shields.io/crates/d/stivale_boot)
+![crates.io](https://img.shields.io/crates/v/stivale_boot)
+![docs.rs](https://docs.rs/stivale/badge.svg)
 
 Rust crate for parsing stivale and stivale 2 structures.
 
