@@ -9,7 +9,7 @@ mod utils;
 pub use header::*;
 pub use tag::*;
 
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleStruct {
     bootloader_brand: [u8; 64],
     bootloader_version: [u8; 64],

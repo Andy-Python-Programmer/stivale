@@ -90,7 +90,8 @@ make_header_tag!(
     struct StivaleFramebufferHeaderTag: 0x3ecc1bc43d0f7971 => {
         framebuffer_width: u16 = 0,
         framebuffer_height: u16 = 0,
-        framebuffer_bpp: u16 = 0
+        framebuffer_bpp: u16 = 0,
+        _padding: u16 = 0
     };
 );
 

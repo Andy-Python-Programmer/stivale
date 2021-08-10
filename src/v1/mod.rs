@@ -41,7 +41,7 @@ bitflags::bitflags! {
     }
 }
 
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleHeader {
     stack: *const u8,
     flags: StivaleHeaderFlags,
@@ -110,7 +110,7 @@ impl StivaleHeader {
 
 /// Structure representing a module, containing the information of a module that
 /// the bootloader loaded alongside the kernel.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleModule {
     /// Address where this module has been loaded.
     pub start: u64,
@@ -189,7 +189,7 @@ pub enum StivaleMemoryMapEntryType {
     Framebuffer = 0x1002,
 }
 
-#[repr(C, packed)]
+#[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct StivaleMemoryMapEntry {
     /// Physical address of base of the memory section.
@@ -242,7 +242,7 @@ impl<'a> Iterator for StivaleMemoryMapIter<'a> {
     }
 }
 
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleStruct {
     /// Address of the null-terminated command line.
     pub command_line: u64,
@@ -287,7 +287,7 @@ pub struct StivaleStruct {
     pub blue_mask_size: u8,
     /// Shift of the blue mask in RGB.
     pub blue_mask_shift: u8,
-    reserved: u8,
+    _padding: u8,
 
     /// 32-bit SMBIOS entry point address. Set to 0 if unavailable.
     pub smbios_entry_32: u64,

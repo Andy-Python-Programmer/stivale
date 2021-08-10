@@ -2,7 +2,7 @@ use core::marker::PhantomData;
 
 use super::header::StivaleSmpHeaderTagFlags;
 
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleTagHeader {
     pub identifier: u64,
     pub next: u64,
@@ -10,7 +10,7 @@ pub struct StivaleTagHeader {
 
 /// If the framebuffer tag was requested through the framebuffer tag header and its supported by the stivale
 /// bootloader, this tag is returned to the kernel. This tag provides an interface to the framebuffer.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleFramebufferTag {
     pub header: StivaleTagHeader,
     /// The address of the framebuffer.
@@ -38,6 +38,7 @@ pub struct StivaleFramebufferTag {
     pub blue_mask_size: u8,
     /// Shift of the blue mask in RGB.
     pub blue_mask_shift: u8,
+    _padding: u8,
 }
 
 impl StivaleFramebufferTag {
@@ -51,7 +52,7 @@ impl StivaleFramebufferTag {
 
 /// If the terminal tag was requested through the terminal tag header and its supported by the stivale
 /// bootloader, this tag is returned to the kernel. This tag provides an interface to the stivale terminal.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleTerminalTag {
     pub header: StivaleTagHeader,
     pub flags: u32,
@@ -92,7 +93,7 @@ impl StivaleTerminalTag {
 }
 
 /// This tag is used to get the location of the ACPI RSDP structure in memory.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleRsdpTag {
     pub header: StivaleTagHeader,
     /// Pointer to the ACPI RSDP structure.
@@ -127,7 +128,7 @@ pub enum StivaleMemoryMapEntryType {
     Framebuffer = 0x1002,
 }
 
-#[repr(C, packed)]
+#[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct StivaleMemoryMapEntry {
     /// Physical address of base of the memory section.
@@ -137,7 +138,7 @@ pub struct StivaleMemoryMapEntry {
     /// The type of this memory map entry.
     pub entry_type: StivaleMemoryMapEntryType,
 
-    padding: u32,
+    _padding: u32,
 }
 
 impl StivaleMemoryMapEntry {
@@ -155,7 +156,7 @@ impl StivaleMemoryMapEntry {
     }
 }
 
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleMemoryMapTag {
     pub header: StivaleTagHeader,
     /// Total length of the memory map entries.
@@ -206,7 +207,7 @@ impl<'a> Iterator for StivaleMemoryMapIter<'a> {
 }
 
 /// This tag is used to get the current UNIX epoch, as per RTC.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleEpochTag {
     pub header: StivaleTagHeader,
     /// UNIX epoch at boot, which is read from system RTC.
@@ -224,7 +225,7 @@ bitflags::bitflags! {
 }
 
 /// This tag is used to get the info about the firmware.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleFirmwareTag {
     pub header: StivaleTagHeader,
     /// Flags telling about the firmware and boot flags passed by the bootloader.
@@ -232,7 +233,7 @@ pub struct StivaleFirmwareTag {
 }
 
 /// This tag is used to get a pointer to the EFI system table if available.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleEfiSystemTableTag {
     pub header: StivaleTagHeader,
     /// Address of the EFI system table.
@@ -241,7 +242,7 @@ pub struct StivaleEfiSystemTableTag {
 
 /// This tag is used to get the kernel with a pointer to a copy the raw executable
 /// file of the kernel that the bootloader loaded.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleKernelFileTag {
     pub header: StivaleTagHeader,
     /// Address of the raw kernel file.
@@ -250,7 +251,7 @@ pub struct StivaleKernelFileTag {
 
 /// This tag is used to get the slide that the bootloader applied over the kernel's load
 /// address as a positive offset.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleKernelSlideTag {
     pub header: StivaleTagHeader,
     /// The kernel slide. See structure-level documentation for more information.
@@ -259,7 +260,7 @@ pub struct StivaleKernelSlideTag {
 
 /// This tag is used to get the kernel the command line string that was passed to it by
 /// the bootloader.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleCommandLineTag {
     pub header: StivaleTagHeader,
     /// Pointer to a null-terminated cmdline.
@@ -267,7 +268,7 @@ pub struct StivaleCommandLineTag {
 }
 
 /// This tag is used to get the EDID information as acquired by the firmware.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleEdidInfoTag {
     pub header: StivaleTagHeader,
     /// Length of the EDID information array.
@@ -291,14 +292,14 @@ impl StivaleEdidInfoTag {
 #[deprecated(
     note = "This tag is deprecated and considered legacy. Use is discouraged and it may not be supported on newer bootloaders."
 )]
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleMtrrTag {
     pub header: StivaleTagHeader,
 }
 
 /// Structure representing a module, containing the information of a module that
 /// the bootloader loaded alongside the kernel.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleModule {
     /// Address where this module has been loaded.
     pub start: u64,
@@ -350,7 +351,7 @@ impl<'a> Iterator for StivaleModuleIter<'a> {
 }
 
 /// This tag is used to get the modules that the bootloader loaded alongside the kernel, if any.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleModuleTag {
     pub header: StivaleTagHeader,
     /// Length of the modules array.
@@ -378,7 +379,7 @@ impl StivaleModuleTag {
 }
 
 /// This tag is used to get the location of the SMBIOS entry points in memory.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleSmbiosTag {
     pub header: StivaleTagHeader,
     /// Stivale specification says that the flags in this tag are for future use
@@ -391,7 +392,7 @@ pub struct StivaleSmbiosTag {
 }
 
 /// SMP imformation structure.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleSmpInfo {
     /// ACPI Processor UID as specified by MADT.
     pub acpi_processor_uid: u32,
@@ -423,7 +424,7 @@ pub struct StivaleSmpInfo {
     pub extra: u64,
 }
 
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleSmpTag {
     pub header: StivaleTagHeader,
     pub flags: StivaleSmpHeaderTagFlags,
@@ -448,7 +449,7 @@ impl StivaleSmpTag {
 
 /// This tag reports that the kernel has been booted via PXE, and reports the server ip that
 /// it was booted from.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivalePxeInfoTag {
     pub header: StivaleTagHeader,
     /// Server IP in network byte order.
@@ -456,7 +457,7 @@ pub struct StivalePxeInfoTag {
 }
 
 /// This tag reports that there is a memory mapped UART port and its address.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleUartTag {
     pub header: StivaleTagHeader,
     /// The address of the UART port.
@@ -464,7 +465,7 @@ pub struct StivaleUartTag {
 }
 
 /// This tag describes a device tree blob for the platform.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleDeviceTreeTag {
     pub header: StivaleTagHeader,
     /// The address of the device tree blob.
@@ -474,7 +475,7 @@ pub struct StivaleDeviceTreeTag {
 }
 
 /// This tag describes the high physical memory location.
-#[repr(C, packed)]
+#[repr(C)]
 pub struct StivaleVMapTag {
     pub header: StivaleTagHeader,
     /// VMAP_HIGH, where the physical memory is mapped in the higher half.
