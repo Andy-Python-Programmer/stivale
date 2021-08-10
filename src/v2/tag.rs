@@ -475,8 +475,17 @@ pub struct StivaleDeviceTreeTag {
 
 /// This tag describes the high physical memory location.
 #[repr(C, packed)]
-pub struct StivaleVMap {
+pub struct StivaleVMapTag {
     pub header: StivaleTagHeader,
     /// VMAP_HIGH, where the physical memory is mapped in the higher half.
     pub address: u64,
+}
+
+#[repr(C)]
+pub struct StivaleKernelFileV2Tag {
+    pub header: StivaleTagHeader,
+    /// Address of the raw kernel file.
+    pub kernel_start: u64,
+    /// Size of the raw kernel file.
+    pub kernel_size: u64,
 }

@@ -132,8 +132,13 @@ impl StivaleStruct {
             .map(|addr| unsafe { &*(addr as *const StivaleDeviceTreeTag) })
     }
 
-    pub fn vmap(&self) -> Option<&'static StivaleVMap> {
+    pub fn vmap(&self) -> Option<&'static StivaleVMapTag> {
         self.get_tag(0xb0ed257db18cb58f)
-            .map(|addr| unsafe { &*(addr as *const StivaleVMap) })
+            .map(|addr| unsafe { &*(addr as *const StivaleVMapTag) })
+    }
+
+    pub fn kernel_file_v2(&self) -> Option<&'static StivaleKernelFileV2Tag> {
+        self.get_tag(0x37c13018a02c6ea2)
+            .map(|addr| unsafe { &*(addr as *const StivaleKernelFileV2Tag) })
     }
 }
