@@ -62,6 +62,16 @@ impl StivaleHeader {
         }
     }
 
+    /// Returns the stack pointer placed in this header.
+    pub fn get_stack(&self) -> *const u8 {
+        self.stack
+    }
+
+    /// Returns the flags stored in this header.
+    pub fn get_flags(&self) -> u64 {
+        self.flags
+    }
+
     pub const fn entry_point(mut self, func: extern "C" fn(&'static StivaleStruct) -> !) -> Self {
         self.entry_point = StivaleHeaderEntryPoint { func };
         self
