@@ -17,6 +17,30 @@ pub struct StivaleStruct {
 }
 
 impl StivaleStruct {
+    pub fn new() -> Self {
+        Self {
+            bootloader_brand: [0; 64],
+            bootloader_version: [0; 64],
+            tags: 0x00,
+        }
+    }
+
+    // SAFETY: Its allowed to update the tags, bootloader brand and bootloader version fields
+    // since the stivale header provides an immutable reference to the stivale struct
+    // and then the stivale struct is only allowed to be updated if its made by the user itself
+    // (its required to fill up these fields if you are making a stivale2 bootloader :^)).
+    pub fn add_tag(&mut self, header: StivaleTagHeader) {
+        self.tags = &header as *const StivaleTagHeader as u64;
+    }
+
+    pub fn set_bootloader_brand(&mut self, brand: &str) {
+        self.bootloader_brand[..brand.len()].copy_from_slice(brand.as_bytes());
+    }
+
+    pub fn set_bootloader_version(&mut self, version: &str) {
+        self.bootloader_version[..version.len()].copy_from_slice(version.as_bytes());
+    }
+
     pub fn bootloader_brand(&self) -> &str {
         utils::string_from_slice(&self.bootloader_brand)
     }
