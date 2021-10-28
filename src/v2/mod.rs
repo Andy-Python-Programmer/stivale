@@ -165,4 +165,8 @@ impl StivaleStruct {
         self.get_tag(0x37c13018a02c6ea2)
             .map(|addr| unsafe { &*(addr as *const StivaleKernelFileV2Tag) })
     }
+
+    pub fn pmrs(&self) -> Option<&'static StivalePmrsTag> {
+        self.get_tag(0x5df266a64047b6bd).map(|addr| unsafe { &*(addr as *const StivalePmrsTag) })
+    }
 }
