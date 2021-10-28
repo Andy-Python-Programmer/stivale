@@ -490,3 +490,41 @@ pub struct StivaleKernelFileV2Tag {
     /// Size of the raw kernel file.
     pub kernel_size: u64,
 }
+
+bitflags::bitflags! {
+    pub struct StivalePmrPermissionFlags: u64 {
+        const EXECUTABLE = 1 << 0;
+        const WRITABLE   = 1 << 1;
+        const READABLE   = 1 << 2;
+    }
+}
+
+#[repr(C)]
+pub struct StivalePmr {
+    pub base: u64,
+    pub size: u64,
+    /// The permissions field contains flgas to determine the range's permissions.
+    pub permissions: u64,
+}
+
+impl StivalePmr {
+    pub fn permissions(&self) -> StivalePmrPermissionFlags {
+        StivalePmrPermissionFlags::from_bits_truncate(self.permissions)
+    }
+}
+
+#[repr(C)]
+pub struct StivalePmrsTag {
+    pub header: StivaleTagHeader,
+    /// Count of PMRs in following array.
+    pub pmr_count: u64,
+    /// Array of PMR structs.
+    pub pmrs: [StivalePmr; 0],
+}
+
+impl StivalePmrsTag {
+    /// Return's the PMRs array pointer as a rust slice.
+    pub fn as_slice(&self) -> &[StivalePmr] {
+        unsafe { core::slice::from_raw_parts(self.pmrs.as_ptr(), self.pmr_count as usize) }
+    }
+}
