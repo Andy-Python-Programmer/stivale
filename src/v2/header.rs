@@ -151,7 +151,7 @@ make_header_tag!(
 make_header_tag!(
     /// If this tag is present the bootloader is instructed to unmap the first page of the virtual address
     /// space before passing control to the kernel, for architectures that support paging.
-    struct StivaleUnmapNullHeadertag: 0x92919432b16fe7e7;
+    struct StivaleUnmapNullHeaderTag: 0x92919432b16fe7e7;
 );
 
 unsafe impl Send for StivaleHeader {}
