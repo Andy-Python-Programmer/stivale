@@ -5,7 +5,7 @@ macro_rules! make_header_tag {
 		make_header_tag!($(#[$meta])* struct $name: $id => {};);
 	};
 
-	($(#[$meta:meta])* struct $name:ident: $id:expr => {$($field_name:ident : $field_ty:ty = $field_default:expr),*};) => {
+	($(#[$meta:meta])* struct $name:ident: $id:expr => {$($(#[$field_meta:meta])* $field_name:ident : $field_ty:ty = $field_default:expr),*};) => {
         $(#[$meta])*
         #[repr(C, packed)]
         pub struct $name {
@@ -31,7 +31,7 @@ macro_rules! make_header_tag {
 				self
 			}
 
-			$(pub const fn $field_name(mut self, value: $field_ty) -> Self {
+			$($(#[$field_meta])* pub const fn $field_name(mut self, value: $field_ty) -> Self {
 				self.$field_name = value;
 				self
 			})*
@@ -152,6 +152,22 @@ make_header_tag!(
     /// If this tag is present the bootloader is instructed to unmap the first page of the virtual address
     /// space before passing control to the kernel, for architectures that support paging.
     struct StivaleUnmapNullHeaderTag: 0x92919432b16fe7e7;
+);
+
+make_header_tag!(
+    /// This tag tells the bootloader that the kernel has no requirement for a framebuffer
+    /// to be initialised. Omitting both the any video header tag and the framebuffer header
+    /// tag means "force CGA text mode" (where available), and the bootloader will refuse to
+    /// boot the kernel if it fails to fulfill that request.
+    struct StivaleAnyVideoTag: 0xc75c9fa92a44c4db => {
+        /// 0: prefer linear framebuffer
+        ///
+        /// 1: prefer no linear framebuffer
+        ///    (CGA text mode if available)
+        ///
+        /// All other values undefined.
+        preference: u64 = 0
+    };
 );
 
 unsafe impl Send for StivaleHeader {}
