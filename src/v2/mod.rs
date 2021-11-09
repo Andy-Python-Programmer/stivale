@@ -141,6 +141,11 @@ impl StivaleStruct {
             .map(|addr| unsafe { &*(addr as *const StivaleSmpTag) })
     }
 
+    pub fn smp_mut(&mut self) -> Option<&'static mut StivaleSmpTag> {
+        self.get_tag(0x34d1d96339647025)
+            .map(|addr| unsafe { &mut *(addr as *mut StivaleSmpTag) })
+    }
+
     pub fn pxe_info(&self) -> Option<&'static StivalePxeInfoTag> {
         self.get_tag(0x29d1e96239247032)
             .map(|addr| unsafe { &*(addr as *const StivalePxeInfoTag) })
@@ -167,6 +172,7 @@ impl StivaleStruct {
     }
 
     pub fn pmrs(&self) -> Option<&'static StivalePmrsTag> {
-        self.get_tag(0x5df266a64047b6bd).map(|addr| unsafe { &*(addr as *const StivalePmrsTag) })
+        self.get_tag(0x5df266a64047b6bd)
+            .map(|addr| unsafe { &*(addr as *const StivalePmrsTag) })
     }
 }

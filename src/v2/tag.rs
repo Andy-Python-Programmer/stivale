@@ -426,24 +426,52 @@ pub struct StivaleSmpInfo {
 
 #[repr(C)]
 pub struct StivaleSmpTag {
-    pub header: StivaleTagHeader,
+    header: StivaleTagHeader,
     pub flags: StivaleSmpHeaderTagFlags,
     /// LAPIC ID of the BSP (bootstrap processor).
     pub bsp_lapic_id: u32,
     /// Stivale specification says that this field is reserved for future use.
     pub unused: u32,
     /// The total number of logical CPUs (including BSP).
-    pub cpu_count: u64,
+    cpu_count: u64,
     /// Pointer to the SMP info array (including BSP).
     pub smp_info_array: [StivaleSmpInfo; 0],
 }
 
 impl StivaleSmpTag {
+    /// Return's the tag header
+    pub fn header(&self) -> &StivaleTagHeader {
+        &self.header
+    }
+
+    /// Return's the total number of logical CPUs (including BSP).
+    pub fn cpu_count(&self) -> u64 {
+        self.cpu_count
+    }
+
     /// Return's the SMP info array pointer as a rust slice.
     pub fn as_slice(&self) -> &[StivaleSmpInfo] {
         unsafe {
             core::slice::from_raw_parts(self.smp_info_array.as_ptr(), self.cpu_count as usize)
         }
+    }
+
+    /// Return's the SMP info array pointer as a mutable rust slice.
+    ///
+    /// # SAFETY:
+    /// If this tag was returned by a bootloader mutating the slice must conform to the following
+    /// rules in order to not trigger UB:
+    /// - Writing to [`StivaleSmpInfo::goto_address`] will cause it to start executing at the
+    /// provided address as such a proper stack must have been set at
+    /// [`StivaleSmpInfo::target_stack`] already if a stack is needed.
+    /// - The stack pointer written to [`StivaleSmpInfo::target_stack`] must not alias already
+    /// mapped memory, this means that the memory area dedicated to the stack must be exclusively
+    /// used for the AP stack and stack overflows can trigger UB (consider using a guard page).
+    /// - The address pointed by [`StivaleSmpInfo::goto_address`] must be that of a
+    /// `extern "C" fn(&'static StivaleSmpInfo) -> !`, this also means that once written this
+    /// struct must not be mutated any further.
+    pub unsafe fn as_slice_mut(&mut self) -> &mut [StivaleSmpInfo] {
+        core::slice::from_raw_parts_mut(self.smp_info_array.as_mut_ptr(), self.cpu_count as usize)
     }
 }
 
