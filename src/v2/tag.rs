@@ -458,9 +458,11 @@ impl StivaleSmpTag {
 
     /// Return's the SMP info array pointer as a mutable rust slice.
     ///
-    /// # SAFETY:
+    /// ## Safety
+    ///
     /// If this tag was returned by a bootloader mutating the slice must conform to the following
     /// rules in order to not trigger UB:
+    ///
     /// - Writing to [`StivaleSmpInfo::goto_address`] will cause it to start executing at the
     /// provided address as such a proper stack must have been set at
     /// [`StivaleSmpInfo::target_stack`] already if a stack is needed.
