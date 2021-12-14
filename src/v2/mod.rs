@@ -175,4 +175,9 @@ impl StivaleStruct {
         self.get_tag(0x5df266a64047b6bd)
             .map(|addr| unsafe { &*(addr as *const StivalePmrsTag) })
     }
+
+    pub fn kernel_base_addr(&self) -> Option<&'static StivaleKernelBaseAddressTag> {
+        self.get_tag(0x060d78874a2a8af0)
+            .map(|addr| unsafe { &*(addr as *const StivaleKernelBaseAddressTag) })
+    }
 }

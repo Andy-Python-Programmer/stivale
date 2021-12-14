@@ -558,3 +558,10 @@ impl StivalePmrsTag {
         unsafe { core::slice::from_raw_parts(self.pmrs.as_ptr(), self.pmr_count as usize) }
     }
 }
+
+#[repr(C)]
+pub struct StivaleKernelBaseAddressTag {
+    pub header: StivaleTagHeader,
+    pub physical_base_address: u64,
+    pub virtual_base_address: u64,
+}
