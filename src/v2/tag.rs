@@ -161,14 +161,21 @@ pub struct StivaleMemoryMapTag {
     pub header: StivaleTagHeader,
     /// Total length of the memory map entries.
     pub entries_len: u64,
-    /// Pointer to the memory map entries.
-    pub entry_array: [StivaleMemoryMapEntry; 0],
+    /// The memory map entries.
+    pub entry_array: [StivaleMemoryMapEntry],
 }
 
 impl StivaleMemoryMapTag {
     /// Return's memory map entries pointer as a rust slice.
     pub fn as_slice(&self) -> &[StivaleMemoryMapEntry] {
         unsafe { core::slice::from_raw_parts(self.entry_array.as_ptr(), self.entries_len as usize) }
+    }
+
+    /// # Safety
+    /// ptr must be a pointer to a properly initialized StivaleMemoryMapTag struct with `mem_entry_count` entries in the `entry_array`
+    pub unsafe fn new_from_ptr_count(ptr: *mut (), mem_entry_count: u64) -> *mut Self {
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, mem_entry_count as usize); // construct a pointer to a slice that has the appropriate length metadata
+        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
     }
 
     /// Returns an iterator over all the memory regions.
@@ -273,14 +280,21 @@ pub struct StivaleEdidInfoTag {
     pub header: StivaleTagHeader,
     /// Length of the EDID information array.
     pub edid_len: u64,
-    /// Pointer to the EDID information array.
-    pub info_array: [u8; 0],
+    /// The variable length EDID information array.
+    pub info_array: [u8],
 }
 
 impl StivaleEdidInfoTag {
     /// Return's the EDID information pointer as a rust slice.
     pub fn as_slice(&self) -> &[u8] {
         unsafe { core::slice::from_raw_parts(self.info_array.as_ptr(), self.edid_len as usize) }
+    }
+
+    /// # Safety
+    /// ptr must be a pointer to a properly initialized StivaleEdidInfoTag struct with `edid_count` entries in the `info_array`
+    pub unsafe fn new_from_ptr_count(ptr: *mut (), edid_count: u64) -> *mut Self {
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, edid_count as usize); // construct a pointer to a slice that has the appropriate length metadata
+        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
     }
 }
 
@@ -356,8 +370,8 @@ pub struct StivaleModuleTag {
     pub header: StivaleTagHeader,
     /// Length of the modules array.
     pub module_len: u64,
-    /// Pointer to the modules array.
-    pub modules_array: [StivaleModule; 0],
+    /// The variable length modules array.
+    pub modules_array: [StivaleModule],
 }
 
 impl StivaleModuleTag {
@@ -375,6 +389,13 @@ impl StivaleModuleTag {
         unsafe {
             core::slice::from_raw_parts(self.modules_array.as_ptr(), self.module_len as usize)
         }
+    }
+
+    /// # Safety
+    /// ptr must be a pointer to a properly initialized StivaleModuleTag struct with `module_count` entries in the `modules_array`
+    pub unsafe fn new_from_ptr_count(ptr: *mut (), module_count: u64) -> *mut Self {
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, module_count as usize); // construct a pointer to a slice that has the appropriate length metadata
+        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
     }
 }
 
@@ -434,8 +455,8 @@ pub struct StivaleSmpTag {
     pub unused: u32,
     /// The total number of logical CPUs (including BSP).
     cpu_count: u64,
-    /// Pointer to the SMP info array (including BSP).
-    pub smp_info_array: [StivaleSmpInfo; 0],
+    /// The variable length SMP info array (including BSP).
+    pub smp_info_array: [StivaleSmpInfo],
 }
 
 impl StivaleSmpTag {
@@ -474,6 +495,13 @@ impl StivaleSmpTag {
     /// struct must not be mutated any further.
     pub unsafe fn as_slice_mut(&mut self) -> &mut [StivaleSmpInfo] {
         core::slice::from_raw_parts_mut(self.smp_info_array.as_mut_ptr(), self.cpu_count as usize)
+    }
+
+    /// # Safety
+    /// ptr must be a pointer to a properly initialized StivaleSmpTag struct with `cpu_count` entries in the `smp_info_array`
+    pub unsafe fn new_from_ptr_count(ptr: *mut (), cpu_count: u64) -> *mut Self {
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, cpu_count as usize); // construct a pointer to a slice that has the appropriate length metadata
+        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
     }
 }
 
@@ -549,13 +577,20 @@ pub struct StivalePmrsTag {
     /// Count of PMRs in following array.
     pub pmr_count: u64,
     /// Array of PMR structs.
-    pub pmrs: [StivalePmr; 0],
+    pub pmrs: [StivalePmr],
 }
 
 impl StivalePmrsTag {
     /// Return's the PMRs array pointer as a rust slice.
     pub fn as_slice(&self) -> &[StivalePmr] {
         unsafe { core::slice::from_raw_parts(self.pmrs.as_ptr(), self.pmr_count as usize) }
+    }
+
+    /// # Safety
+    /// ptr must be a pointer to a properly initialized StivalePmrsTag struct with `pmr_count` entries in the `prms` field
+    pub unsafe fn new_from_ptr_count(ptr: *mut (), pmr_count: u64) -> *mut Self {
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, pmr_count as usize); // construct a pointer to a slice that has the appropriate length metadata
+        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
     }
 }
 

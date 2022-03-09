@@ -2,6 +2,8 @@
 //! modern version of the legacy stivale protocol which provides the kernel with most of the features
 //! one may need. The stivale2 protocol also supports 32-bit systems.
 
+use core::mem;
+
 mod header;
 mod tag;
 mod utils;
@@ -71,8 +73,14 @@ impl StivaleStruct {
     }
 
     pub fn memory_map(&self) -> Option<&'static StivaleMemoryMapTag> {
-        self.get_tag(0x2187f79e8612de07)
-            .map(|addr| unsafe { &*(addr as *const StivaleMemoryMapTag) })
+        self.get_tag(0x2187f79e8612de07).map(|addr| {
+            let ptr = addr as *mut u8;
+            unsafe {
+                let count = *(ptr.add(mem::size_of::<StivaleTagHeader>()) as *const u64);
+                let memory_map_ptr = StivaleMemoryMapTag::new_from_ptr_count(ptr as *mut (), count);
+                &*memory_map_ptr
+            }
+        })
     }
 
     pub fn framebuffer(&self) -> Option<&'static StivaleFramebufferTag> {
@@ -81,8 +89,14 @@ impl StivaleStruct {
     }
 
     pub fn edid_info(&self) -> Option<&'static StivaleEdidInfoTag> {
-        self.get_tag(0x968609d7af96b845)
-            .map(|addr| unsafe { &*(addr as *const StivaleEdidInfoTag) })
+        self.get_tag(0x968609d7af96b845).map(|addr| {
+            let ptr = addr as *mut u8;
+            unsafe {
+                let count = *(ptr.add(mem::size_of::<StivaleTagHeader>()) as *const u64);
+                let edid_ptr = StivaleEdidInfoTag::new_from_ptr_count(ptr as *mut (), count);
+                &*edid_ptr
+            }
+        })
     }
 
     #[allow(deprecated)]
@@ -97,8 +111,14 @@ impl StivaleStruct {
     }
 
     pub fn modules(&self) -> Option<&'static StivaleModuleTag> {
-        self.get_tag(0x4b6fe466aade04ce)
-            .map(|addr| unsafe { &*(addr as *const StivaleModuleTag) })
+        self.get_tag(0x4b6fe466aade04ce).map(|addr| {
+            let ptr = addr as *mut u8;
+            unsafe {
+                let count = *(ptr.add(mem::size_of::<StivaleTagHeader>()) as *const u64);
+                let module_ptr = StivaleModuleTag::new_from_ptr_count(ptr as *mut (), count);
+                &*module_ptr
+            }
+        })
     }
 
     pub fn rsdp(&self) -> Option<&'static StivaleRsdpTag> {
@@ -137,13 +157,27 @@ impl StivaleStruct {
     }
 
     pub fn smp(&self) -> Option<&'static StivaleSmpTag> {
-        self.get_tag(0x34d1d96339647025)
-            .map(|addr| unsafe { &*(addr as *const StivaleSmpTag) })
+        self.get_tag(0x34d1d96339647025).map(|addr| {
+            let ptr = addr as *mut u8;
+            unsafe {
+                // +32 calculated from the definition of the struct, offset to the cpu_count
+                let count = *(ptr.add(32) as *const u64);
+                let smp_ptr = StivaleSmpTag::new_from_ptr_count(ptr as *mut (), count);
+                &*smp_ptr
+            }
+        })
     }
 
     pub fn smp_mut(&mut self) -> Option<&'static mut StivaleSmpTag> {
-        self.get_tag(0x34d1d96339647025)
-            .map(|addr| unsafe { &mut *(addr as *mut StivaleSmpTag) })
+        self.get_tag(0x34d1d96339647025).map(|addr| {
+            let ptr = addr as *mut u8;
+            unsafe {
+                // +32 calculated from the definition of the struct, offset to the cpu_count
+                let count = *(ptr.add(32) as *const u64);
+                let smp_ptr = StivaleSmpTag::new_from_ptr_count(ptr as *mut (), count);
+                &mut *smp_ptr
+            }
+        })
     }
 
     pub fn pxe_info(&self) -> Option<&'static StivalePxeInfoTag> {
@@ -172,8 +206,14 @@ impl StivaleStruct {
     }
 
     pub fn pmrs(&self) -> Option<&'static StivalePmrsTag> {
-        self.get_tag(0x5df266a64047b6bd)
-            .map(|addr| unsafe { &*(addr as *const StivalePmrsTag) })
+        self.get_tag(0x5df266a64047b6bd).map(|addr| {
+            let ptr = addr as *mut u8;
+            unsafe {
+                let count = *(ptr.add(mem::size_of::<StivaleTagHeader>()) as *const u64);
+                let pmrs_ptr = StivalePmrsTag::new_from_ptr_count(ptr as *mut (), count);
+                &*pmrs_ptr
+            }
+        })
     }
 
     pub fn kernel_base_addr(&self) -> Option<&'static StivaleKernelBaseAddressTag> {
