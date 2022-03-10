@@ -176,10 +176,14 @@ impl StivaleMemoryMapTag {
     }
 
     /// # Safety
-    /// ptr must be a pointer to a properly initialized StivaleMemoryMapTag struct with `mem_entry_count` entries in the `entry_array`
+    /// `ptr` must be a pointer to a properly initialized [`StivaleMemoryMapTag`] struct with
+    /// `mem_entry_count` entries in the `entry_array`.
     pub unsafe fn new_from_ptr_count(ptr: *mut (), mem_entry_count: u64) -> *mut Self {
-        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, mem_entry_count as usize); // construct a pointer to a slice that has the appropriate length metadata
-        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
+        // Construct a pointer to a slice that has the appropriate length metadata
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, mem_entry_count as usize);
+        // Change the pointer to point to the proper struct, the length metadata is unchanged, so the DST
+        // field has the same length.
+        slice_ptr as *mut Self
     }
 
     /// Returns an iterator over all the memory regions.
@@ -295,10 +299,14 @@ impl StivaleEdidInfoTag {
     }
 
     /// # Safety
-    /// ptr must be a pointer to a properly initialized StivaleEdidInfoTag struct with `edid_count` entries in the `info_array`
+    /// `ptr` must be a pointer to a properly initialized [`StivaleEdidInfoTag`] struct with
+    /// `edid_count` entries in the `info_array`
     pub unsafe fn new_from_ptr_count(ptr: *mut (), edid_count: u64) -> *mut Self {
-        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, edid_count as usize); // construct a pointer to a slice that has the appropriate length metadata
-        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
+        // Construct a pointer to a slice that has the appropriate length metadata.
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, edid_count as usize);
+        // Change the pointer to point to the proper struct, the length metadata is unchanged, so the
+        // DST field has the same length
+        slice_ptr as *mut Self
     }
 }
 
@@ -396,10 +404,14 @@ impl StivaleModuleTag {
     }
 
     /// # Safety
-    /// ptr must be a pointer to a properly initialized StivaleModuleTag struct with `module_count` entries in the `modules_array`
+    /// `ptr` must be a pointer to a properly initialized [`StivaleModuleTag`] struct with
+    /// `module_count` entries in the `modules_array`
     pub unsafe fn new_from_ptr_count(ptr: *mut (), module_count: u64) -> *mut Self {
-        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, module_count as usize); // construct a pointer to a slice that has the appropriate length metadata
-        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
+        // Construct a pointer to a slice that has the appropriate length metadata.
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, module_count as usize);
+        // Change the pointer to point to the proper struct, the length metadata is unchanged, so the
+        // DST field has the same length
+        slice_ptr as *mut Self
     }
 }
 
@@ -502,10 +514,14 @@ impl StivaleSmpTag {
     }
 
     /// # Safety
-    /// ptr must be a pointer to a properly initialized StivaleSmpTag struct with `cpu_count` entries in the `smp_info_array`
+    /// `ptr` must be a pointer to a *properly* initialized [`StivaleSmpTag`] struct with `cpu_count`
+    /// entries in the `smp_info_array`.
     pub unsafe fn new_from_ptr_count(ptr: *mut (), cpu_count: u64) -> *mut Self {
-        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, cpu_count as usize); // construct a pointer to a slice that has the appropriate length metadata
-        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
+        // Construct a pointer to a slice that has the appropriate length metadata.
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, cpu_count as usize);
+        // Change the pointer to point to the proper struct, the length metadata is unchanged,
+        // so the DST field has the same length.
+        slice_ptr as *mut Self
     }
 }
 
@@ -591,10 +607,14 @@ impl StivalePmrsTag {
     }
 
     /// # Safety
-    /// ptr must be a pointer to a properly initialized StivalePmrsTag struct with `pmr_count` entries in the `prms` field
+    /// `ptr` must be a pointer to a properly initialized [`StivalePmrsTag`] struct with `pmr_count`
+    /// entries in the `prms` field.
     pub unsafe fn new_from_ptr_count(ptr: *mut (), pmr_count: u64) -> *mut Self {
-        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, pmr_count as usize); // construct a pointer to a slice that has the appropriate length metadata
-        slice_ptr as *mut Self // change the pointer to point to the proper struct, the length metadata is unchanged, so the DST field has the same length
+        // Construct a pointer to a slice that has the appropriate length metadata.
+        let slice_ptr = core::ptr::slice_from_raw_parts_mut(ptr, pmr_count as usize);
+        // Change the pointer to point to the proper struct, the length metadata is unchanged, so the
+        // DST field has the same length.
+        slice_ptr as *mut Self
     }
 }
 
