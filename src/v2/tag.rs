@@ -72,11 +72,15 @@ impl StivaleTerminalTag {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// let terminal_tag = stivale_struct.terminal().expect("Terminal tag was provided by the stivale2 bootloader");
-    /// let term_write = terminal_tag.term_write();
+    /// use stivale_boot::v2::StivaleStruct;
     ///
-    /// term_write("Hello, Stivale!");
-    /// term_write("Hello, Rust!")
+    /// fn kmain(stivale_struct: &'static StivaleStruct) {
+    ///     let terminal_tag = stivale_struct.terminal().expect("skill issue :^)");
+    ///     let term_write = terminal_tag.term_write();
+    ///
+    ///     term_write("Hello, Stivale!");
+    ///     term_write("Hello, Rust!")
+    /// }
     /// ```
     ///
     /// ## Safety
