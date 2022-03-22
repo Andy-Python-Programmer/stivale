@@ -12,3 +12,4 @@ categories = ["no-std"]
 
 [dependencies]
 bitflags = "1.3.2"
+uuid = { version = "0.8.2", default-features = false }
