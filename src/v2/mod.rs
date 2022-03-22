@@ -220,4 +220,9 @@ impl StivaleStruct {
         self.get_tag(0x060d78874a2a8af0)
             .map(|addr| unsafe { &*(addr as *const StivaleKernelBaseAddressTag) })
     }
+
+    pub fn boot_volume(&self) -> Option<&'static StivaleBootVolumeTag> {
+        self.get_tag(0x9b4358364c19ee62)
+            .map(|addr| unsafe { &*(addr as *const StivaleBootVolumeTag) })
+    }
 }

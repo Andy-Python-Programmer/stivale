@@ -1,6 +1,7 @@
 use core::marker::PhantomData;
 
 use super::header::StivaleSmpHeaderTagFlags;
+use uuid::Uuid;
 
 #[repr(C)]
 pub struct StivaleTagHeader {
@@ -623,4 +624,29 @@ pub struct StivaleKernelBaseAddressTag {
     pub header: StivaleTagHeader,
     pub physical_base_address: u64,
     pub virtual_base_address: u64,
+}
+
+bitflags::bitflags! {
+    pub struct StivaleBootVolumeTagFlags: u64 {
+        const VOLUME_GUID    = 1 << 0;
+        const PARTITION_GUID = 1 << 1;
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[repr(C)]
+pub struct StivaleGuid(u32, u16, u16, [u8; 8]);
+
+impl From<StivaleGuid> for Uuid {
+    fn from(guid: StivaleGuid) -> Self {
+        unsafe { Self::from_fields(guid.0, guid.1, guid.2, &guid.3).unwrap_unchecked() }
+    }
+}
+
+#[repr(C)]
+pub struct StivaleBootVolumeTag {
+    pub header: StivaleTagHeader,
+    pub flags: StivaleBootVolumeTagFlags,
+    pub guid: StivaleGuid,
+    pub part_guid: StivaleGuid,
 }
