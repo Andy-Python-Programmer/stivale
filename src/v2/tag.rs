@@ -637,7 +637,7 @@ bitflags::bitflags! {
 pub struct StivaleGuid(u32, u16, u16, [u8; 8]);
 
 #[cfg(feature = "uuid")]
-impl From<StivaleGuid> for Uuid {
+impl From<StivaleGuid> for uuid::Uuid {
     fn from(guid: StivaleGuid) -> Self {
         unsafe { Self::from_fields(guid.0, guid.1, guid.2, &guid.3).unwrap_unchecked() }
     }
