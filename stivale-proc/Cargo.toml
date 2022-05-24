@@ -1,19 +1,20 @@
 [package]
-name = "stivale-boot"
+name = "stivale-proc"
 description = "Rust crate for parsing stivale and stivale 2 structures"
-version = "0.3.0"
+version = "0.1.0"
 authors = ["Anhad Singh <andypythonappdeveloper@gmail.com>"]
 license = "MIT/Apache-2.0"
 edition = "2018"
 repository = "https://github.com/Andy-Python-Programmer/stivale"
 
-readme = "README.md"
 categories = ["no-std"]
 
-[features]
-helper-macros = ["stivale-proc"]
-default = []
+[lib]
+proc-macro = true
 
 [dependencies]
-bitflags = "1.3.2"
-stivale-proc = { path = "stivale-proc", optional = true } # FIXME: publish stivale-proc
+quote = "1.0.18"
+
+[dependencies.syn]
+features = ["full"]
+version = "1.0.91"

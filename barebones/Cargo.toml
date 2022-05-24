@@ -1,0 +1,7 @@
+[package]
+name = "barebones"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+stivale-boot = { path = "../", features = ["helper-macros"] }
