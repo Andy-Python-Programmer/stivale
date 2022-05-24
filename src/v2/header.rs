@@ -170,5 +170,17 @@ make_header_tag!(
     };
 );
 
+make_header_tag!(
+    /// This tag tells the bootloader to add a random slide to the base address of the higher half
+    /// direct map (HHDM).
+    struct StivaleSlideHddmHeaderTag: 0xdc29269c2af53d1d => {
+        /// All flags are undefined and must be 0.
+        flags: u64 = 0,
+        /// This value must be non-0 and must be aligned to 2MiB. It tells the bootloader what
+        /// alignment the base address of the HHDM should have.
+        alignment: u64 = 2048 * 1024
+    };
+);
+
 unsafe impl Send for StivaleHeader {}
 unsafe impl Sync for StivaleHeader {}
