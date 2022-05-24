@@ -11,6 +11,14 @@ Rust crate for parsing stivale and stivale 2 structures.
 - [Stivale v2 Specification](https://github.com/stivale/stivale/blob/master/STIVALE2.md)
 - [Stivale Specification](https://github.com/stivale/stivale/blob/master/STIVALE.md)
 
+## Barebones
+The project provides an example kernel which can be found in the `barebones` directory; to show you
+how to set up a simple 64-bit **long mode**, **higher half** rust kernel using Limine. The
+kernel is shipped with a build script (`barebones/build.sh`) which is used to build the
+rust kernel, create the ISO file and run the kernel in QEMU.
+
+**Note**: In order to compile and run the barebones kernel, **nightly** rust is required.
+
 ## License
 
 Licensed under either of
